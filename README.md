@@ -14,6 +14,11 @@ Microsoft Defender for Cloud provides two security recommendations about CIEM (C
 ![image](https://github.com/user-attachments/assets/a04ee69d-3c01-4eaa-bcbd-920ceb948f74)<BR>
 ![image](https://github.com/user-attachments/assets/daeaaec9-835e-4c48-a6dc-cbb8d60378b9)<BR>
 
-
 ## Permissions of inactive identities
 ![image](https://github.com/user-attachments/assets/a78d005f-8700-4131-9be7-287bd3173958)
+
+# Install
+two files are posted. You can install Wrokbooks of Microsoft Defender for Cloud via Gallary Template or ARM Template.
+
+- Defender CSPM - [CIEM Dasboard.workbook](https://raw.githubusercontent.com/hisashin0728/MdcCIEMDashboard/refs/heads/main/Defender%20CSPM%20-%20CIEM%20Dasboard.workbook)
+- Defender CSPM - [CIEM Dasboard.json](https://raw.githubusercontent.com/hisashin0728/MdcCIEMDashboard/refs/heads/main/Defender%20CSPM%20-%20CIEM%20Dasboard.json)
