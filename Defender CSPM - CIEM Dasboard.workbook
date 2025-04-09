@@ -94,26 +94,9 @@
     {
       "type": 1,
       "content": {
-        "json": "## CIEM - Overprovisioned ID Information \r\n----"
+        "json": "## CIEM - Overprovisioned ID Information\r\n\r\nAzure overprovisioned identities should have only the necessary permissions. Overprovisioned identities in Azure are those that have been granted more permissions than they use, which can lead to potential misuse, either accidentally or maliciously.\r\n\r\n----"
       },
-      "name": "テキスト - 4"
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend PermissionsCreepIndexScore = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | where PermissionsCreepIndexScore >= {PermissionsCreepIndexScore}\r\n    | summarize count() by resourceType",
-        "size": 1,
-        "title": "PCI (PermissionsCreepIndexScore) Data Source",
-        "queryType": 1,
-        "resourceType": "microsoft.resources/tenants",
-        "crossComponentResources": [
-          "value::tenant"
-        ],
-        "visualization": "piechart"
-      },
-      "customWidth": "50",
-      "name": "CIEM-category"
+      "name": "テキスト - 4 - Copy"
     },
     {
       "type": 3,
@@ -161,20 +144,9 @@
                 "palette": "blue"
               }
             }
-          ],
-          "sortBy": [
-            {
-              "itemKey": "$gen_heatmap_PciMax_2",
-              "sortOrder": 1
-            }
           ]
         },
-        "sortBy": [
-          {
-            "itemKey": "$gen_heatmap_PciMax_2",
-            "sortOrder": 1
-          }
-        ],
+        "sortBy": [],
         "tileSettings": {
           "titleContent": {
             "columnMatch": "subscriptionId",
@@ -244,12 +216,29 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend PermissionsCreepIndexScore = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | where PermissionsCreepIndexScore >= {PermissionsCreepIndexScore}\r\n    | summarize count() by resourceType",
+        "size": 1,
+        "title": "PCI (PermissionsCreepIndexScore) Data Source",
+        "queryType": 1,
+        "resourceType": "microsoft.resources/tenants",
+        "crossComponentResources": [
+          "value::tenant"
+        ],
+        "visualization": "piechart"
+      },
+      "customWidth": "50",
+      "name": "CIEM-category"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
         "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend FirstEvaluationDate = tostring(properties.status.firstEvaluationDate)\r\n    | extend StatusChangeDate = tostring(properties.status.statusChangeDate)\r\n    | project resourceId, resourceName, resourceType, source, subscriptionId, PCI, FirstEvaluationDate, StatusChangeDate\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | order by PCI desc",
         "size": 0,
         "title": "PCI (PermissionsCreepIndexScore) Data",
         "showRefreshButton": true,
         "exportFieldName": "resourceName",
-        "exportParameterName": "RSName",
+        "exportParameterName": "RSName1",
         "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resources/tenants",
@@ -311,7 +300,7 @@
         },
         "sortBy": []
       },
-      "name": "CIEM-1",
+      "name": "CIEM-1a",
       "styleSettings": {
         "showBorder": true
       }
@@ -320,7 +309,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | where resourceName == '{RSName}'\r\n    | extend used = tostring(properties.additionalData.used)\r\n    | extend unused = tostring(properties.additionalData.unused)\r\n    | extend links = strcat('https://',tostring(properties.links.azurePortal))\r\n    | project resourceId, resourceName, PCI, used, unused, links",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | where resourceName == '{RSName1}'\r\n    | extend used = tostring(properties.additionalData.used)\r\n    | extend unused = tostring(properties.additionalData.unused)\r\n    | extend links = strcat('https://',tostring(properties.links.azurePortal))\r\n    | project resourceId, resourceName, PCI, used, unused, links",
         "size": 0,
         "title": "PCI (PermissionsCreepIndexScore) Data Details",
         "queryType": 1,
@@ -352,10 +341,94 @@
                 "linkTarget": "Url"
               }
             }
-          ]
+          ],
+          "rowLimit": 10
         }
       },
-      "name": "CIEM-2",
+      "name": "CIEM-1b",
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## CIEM - Permissions of inactive identities\r\n\r\nMicrosoft Defender for Cloud discovered an identity that has not performed any action on any resource within your Azure subscription in the past 45 days. It is recommended to revoke permissions of inactive identities, in order to reduce the attack surface of your cloud environment.\r\n\r\n----"
+      },
+      "name": "テキスト - 4 - Copy"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"8b0bd683-bcfe-4ab1-96b9-f15a60eaa89d\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend FirstEvaluationDate = tostring(properties.status.firstEvaluationDate)\r\n    | extend StatusChangeDate = tostring(properties.status.statusChangeDate)\r\n    | project resourceId, resourceName, resourceType, source, subscriptionId, PCI, FirstEvaluationDate, StatusChangeDate\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | order by PCI desc",
+        "size": 0,
+        "title": "PCI (PermissionsCreepIndexScore) Data",
+        "showRefreshButton": true,
+        "exportFieldName": "resourceName",
+        "exportParameterName": "RSName2",
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resources/tenants",
+        "crossComponentResources": [
+          "value::tenant"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "resourceId",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "PCI",
+              "formatter": 8,
+              "formatOptions": {
+                "palette": "orangeDark"
+              }
+            },
+            {
+              "columnMatch": "FirstEvaluationDate",
+              "formatter": 6
+            },
+            {
+              "columnMatch": "StatusChangeDate",
+              "formatter": 6
+            },
+            {
+              "columnMatch": "PermissionsCreepIndexScore",
+              "formatter": 8,
+              "formatOptions": {
+                "min": 1,
+                "max": 100,
+                "palette": "orange"
+              }
+            },
+            {
+              "columnMatch": "id",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            }
+          ],
+          "filter": true
+        },
+        "sortBy": []
+      },
+      "name": "CIEM-2a",
       "styleSettings": {
         "showBorder": true
       }
