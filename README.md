@@ -12,7 +12,8 @@ Microsoft Defender for Cloud provides two security recommendations about CIEM (C
 # Dashboard
 ## Overprovisioned ID Information
 ![image](https://github.com/user-attachments/assets/a04ee69d-3c01-4eaa-bcbd-920ceb948f74)<BR>
-![image](https://github.com/user-attachments/assets/daeaaec9-835e-4c48-a6dc-cbb8d60378b9)<BR>
+![image](https://github.com/user-attachments/assets/15f784df-aebf-447e-8d84-6446a40047ee)
+
 
 ## Permissions of inactive identities
 ![image](https://github.com/user-attachments/assets/a78d005f-8700-4131-9be7-287bd3173958)
