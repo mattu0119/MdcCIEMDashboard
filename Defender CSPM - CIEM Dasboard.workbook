@@ -94,15 +94,15 @@
     {
       "type": 1,
       "content": {
-        "json": "## CIEM - Overprovisioned ID Information\r\n\r\nAzure overprovisioned identities should have only the necessary permissions. Overprovisioned identities in Azure are those that have been granted more permissions than they use, which can lead to potential misuse, either accidentally or maliciously.\r\n\r\n----"
+        "json": "## CIEM - Overprovisioned ID Information\r\n\r\nAzure overprovisioned identities should have only the necessary permissions. Overprovisioned identities in Azure are those that have been granted more permissions than they use, which can lead to potential misuse, either accidentally or maliciously.\r\n\r\n| Date | Ver. | Comment |\r\n| --- | --- | --- |\r\n| 2025/4/10 | 0.9 | Add Exempt filter | \r\n\r\n\r\n----"
       },
-      "name": "テキスト - 4 - Copy"
+      "name": "Title-1"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend PermissionsCreepIndexScore = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | where PermissionsCreepIndexScore >= {PermissionsCreepIndexScore}\r\n    | summarize PciAverage = avg(PermissionsCreepIndexScore), PciMax = max(PermissionsCreepIndexScore),PciMin = min(PermissionsCreepIndexScore) by subscriptionId\r\n    | order by PciAverage desc",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend status = trim(\" \", tostring(properties.status.cause)) // Check Exempted\r\n    | where status != \"Exempt\" // Check Exempted\r\n    | extend PermissionsCreepIndexScore = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | where PermissionsCreepIndexScore >= {PermissionsCreepIndexScore}\r\n    | summarize PciAverage = avg(PermissionsCreepIndexScore), PciMax = max(PermissionsCreepIndexScore),PciMin = min(PermissionsCreepIndexScore) by subscriptionId\r\n    | order by PciAverage desc",
         "size": 3,
         "title": "PCI (PermissionsCreepIndexScore) per Subscription",
         "queryType": 1,
@@ -216,7 +216,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend PermissionsCreepIndexScore = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | where PermissionsCreepIndexScore >= {PermissionsCreepIndexScore}\r\n    | summarize count() by resourceType",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend status = trim(\" \", tostring(properties.status.cause)) // Check Exempted\r\n    | where status != \"Exempt\" // Check Exempted\r\n    | extend PermissionsCreepIndexScore = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | where PermissionsCreepIndexScore >= {PermissionsCreepIndexScore}\r\n    | summarize count() by resourceType",
         "size": 1,
         "title": "PCI (PermissionsCreepIndexScore) Data Source",
         "queryType": 1,
@@ -233,7 +233,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend FirstEvaluationDate = tostring(properties.status.firstEvaluationDate)\r\n    | extend StatusChangeDate = tostring(properties.status.statusChangeDate)\r\n    | project resourceId, resourceName, resourceType, source, subscriptionId, PCI, FirstEvaluationDate, StatusChangeDate\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | order by PCI desc",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend status = trim(\" \", tostring(properties.status.cause)) // Check Exempted\r\n    | where status != \"Exempt\" // Check Exempted\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend FirstEvaluationDate = tostring(properties.status.firstEvaluationDate)\r\n    | extend StatusChangeDate = tostring(properties.status.statusChangeDate)\r\n    | project resourceId, resourceName, resourceType, source, subscriptionId, PCI, FirstEvaluationDate, StatusChangeDate\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | order by PCI desc",
         "size": 0,
         "title": "PCI (PermissionsCreepIndexScore) Data",
         "showRefreshButton": true,
@@ -267,6 +267,8 @@
               "columnMatch": "PCI",
               "formatter": 8,
               "formatOptions": {
+                "min": 1,
+                "max": 100,
                 "palette": "orangeDark"
               }
             },
@@ -309,9 +311,10 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | where resourceName == '{RSName1}'\r\n    | extend used = tostring(properties.additionalData.used)\r\n    | extend unused = tostring(properties.additionalData.unused)\r\n    | extend links = strcat('https://',tostring(properties.links.azurePortal))\r\n    | project resourceId, resourceName, PCI, used, unused, links",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | where resourceName == '{RSName1}'\r\n    | extend used = tostring(properties.additionalData.used)\r\n    | extend unused = tostring(properties.additionalData.unused)\r\n    | mv-expand expandedUsed = parse_json(used)\r\n    | extend UsedRole = expandedUsed.externalId, UsedDateTime = expandedUsed.usedDateTime\r\n    | project resourceId, resourceName, subscriptionId, PCI, UsedRole, UsedDateTime",
         "size": 0,
-        "title": "PCI (PermissionsCreepIndexScore) Data Details",
+        "title": "PCI (PermissionsCreepIndexScore) Data Details - Used Role",
+        "showExportToExcel": true,
         "queryType": 1,
         "resourceType": "microsoft.resources/tenants",
         "crossComponentResources": [
@@ -320,9 +323,19 @@
         "gridSettings": {
           "formatters": [
             {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
               "columnMatch": "PCI",
               "formatter": 8,
               "formatOptions": {
+                "min": 1,
+                "max": 100,
                 "palette": "orangeDark"
               }
             },
@@ -342,10 +355,80 @@
               }
             }
           ],
-          "rowLimit": 10
+          "rowLimit": 1000
         }
       },
+      "customWidth": "50",
       "name": "CIEM-1b",
+      "styleSettings": {
+        "showBorder": true
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"d19d5a12-41e9-44e2-b7f5-ee2160f62d62\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | where resourceName == '{RSName1}'\r\n    | extend used = tostring(properties.additionalData.used)\r\n    | extend unused = tostring(properties.additionalData.unused)\r\n    | mv-expand expandedUnused = parse_json(unused)\r\n    | extend UnusedRole = expandedUnused.externalId, UnusedDateTime = expandedUnused.usedDateTime\r\n    | project resourceId, resourceName, subscriptionId, PCI, UnusedRole, UnusedDateTime",
+        "size": 0,
+        "title": "PCI (PermissionsCreepIndexScore) Data Details - Unused Role",
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resources/tenants",
+        "crossComponentResources": [
+          "value::tenant"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "PCI",
+              "formatter": 8,
+              "formatOptions": {
+                "min": 1,
+                "max": 100,
+                "palette": "orangeDark"
+              }
+            },
+            {
+              "columnMatch": "used",
+              "formatter": 1
+            },
+            {
+              "columnMatch": "unused",
+              "formatter": 1
+            },
+            {
+              "columnMatch": "links",
+              "formatter": 7,
+              "formatOptions": {
+                "linkTarget": "Url"
+              }
+            }
+          ],
+          "rowLimit": 1000,
+          "sortBy": [
+            {
+              "itemKey": "$gen_link_resourceId_0",
+              "sortOrder": 1
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "$gen_link_resourceId_0",
+            "sortOrder": 1
+          }
+        ]
+      },
+      "customWidth": "50",
+      "name": "CIEM-1c",
       "styleSettings": {
         "showBorder": true
       }
@@ -361,7 +444,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"8b0bd683-bcfe-4ab1-96b9-f15a60eaa89d\"\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend FirstEvaluationDate = tostring(properties.status.firstEvaluationDate)\r\n    | extend StatusChangeDate = tostring(properties.status.statusChangeDate)\r\n    | project resourceId, resourceName, resourceType, source, subscriptionId, PCI, FirstEvaluationDate, StatusChangeDate\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | order by PCI desc",
+        "query": "securityresources\r\n    | where type == \"microsoft.security/assessments\"\r\n    | extend source = trim(' ', tolower(tostring(properties.resourceDetails.Source)))\r\n    | where source in ({source})\r\n    | where subscriptionId in ({subscription})\r\n    | extend resourceId = trim(' ', tolower(tostring(case(\r\n        source =~ \"azure\", properties.resourceDetails.Id,\r\n        source =~ \"aws\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ \"gcp\" and isnotempty(tostring(properties.resourceDetails.ConnectorId)), properties.resourceDetails.Id,\r\n        source =~ 'aws', properties.resourceDetails.AzureResourceId,\r\n        source =~ 'gcp', properties.resourceDetails.AzureResourceId,\r\n        extract('^(.+)/providers/Microsoft.Security/assessments/.+$',1,id)\r\n        ))))\r\n    | extend assessmentKey = tostring(name)\r\n    | where assessmentKey == \"8b0bd683-bcfe-4ab1-96b9-f15a60eaa89d\"\r\n    | extend status = trim(\" \", tostring(properties.status.cause)) // Check Exempted\r\n    | where status != \"Exempt\" // Check Exempted\r\n    | extend resourceName = trim(\" \", tostring(properties.additionalData.ResourceName))\r\n    | extend resourceType = trim(\" \", tostring(properties.additionalData.ResourceType))\r\n    | where resourceType in ({ResourceType})\r\n    | extend PCI = toint(properties.additionalData.PermissionsCreepIndexScore)\r\n    | extend FirstEvaluationDate = tostring(properties.status.firstEvaluationDate)\r\n    | extend StatusChangeDate = tostring(properties.status.statusChangeDate)\r\n    | project resourceId, resourceName, resourceType, source, subscriptionId, PCI, FirstEvaluationDate, StatusChangeDate\r\n    | where PCI >= {PermissionsCreepIndexScore}\r\n    | order by PCI desc",
         "size": 0,
         "title": "PCI (PermissionsCreepIndexScore) Data",
         "showRefreshButton": true,
