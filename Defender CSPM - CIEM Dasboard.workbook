@@ -4,7 +4,7 @@
     {
       "type": 1,
       "content": {
-        "json": "## Microsoft Defender for Cloud CIEM - Dashboard\r\n\r\n| Date | Ver. | Comment |\r\n| --- | --- | --- |\r\n| 2025/4/10 | 0.9a | Add Exempt filter | \r\n| 2025/4/11 | 0.9b | Add Assigned Role lists (if resource was seletected) | \r\n| 2025/4/11 | 0.9c | Add Tab filter | \r\n\r\n\r\n----"
+        "json": "## Microsoft Defender for Cloud CIEM - Dashboard\r\n\r\n| Date | Ver. | Comment |\r\n| --- | --- | --- |\r\n| 2025/4/10 | 0.9a | Add Exempt filter | \r\n| 2025/4/11 | 0.9b | Add Assigned Role lists (if resource was seletected) | \r\n| 2025/4/11 | 0.9c | Add Tab filter & Target sope field on Assigned Azure RBAC Role| \r\n\r\n\r\n----"
       },
       "name": "Title-1"
     },
@@ -726,7 +726,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "AuthorizationResources\r\n| where type == 'microsoft.authorization/roleassignments'\r\n| extend principalType = tostring(properties['principalType'])\r\n| extend principalId = tostring(properties['principalId'])\r\n| where principalId == \"{PS2}\"\r\n| extend roleDefinitionId = tolower(tostring(properties['roleDefinitionId']))\r\n| project roleDefinitionId, principalId, principalType, subscriptionId\r\n| join kind=inner (\r\n    AuthorizationResources\r\n    | where type == 'microsoft.authorization/roledefinitions'\r\n    | extend roleName = tostring(properties['roleName'])\r\n    | extend roleDescritpion = tostring(properties['description'])\r\n    | extend id = tolower(id)\r\n    | project id, roleName, roleDescritpion\r\n) on $left.roleDefinitionId == $right.id\r\n| project-away roleDefinitionId, id",
+        "query": "AuthorizationResources\r\n| where type == 'microsoft.authorization/roleassignments'\r\n| extend principalType = tostring(properties['principalType'])\r\n| extend principalId = tostring(properties['principalId'])\r\n| where principalId == \"{PS2}\"\r\n| extend roleDefinitionId = tolower(tostring(properties['roleDefinitionId']))\r\n| extend scope = tostring(properties['scope'])\r\n| project roleDefinitionId, principalId, principalType, subscriptionId, scope\r\n| join kind=inner (\r\n    AuthorizationResources\r\n    | where type == 'microsoft.authorization/roledefinitions'\r\n    | extend roleName = tostring(properties['roleName'])\r\n    | extend roleDescritpion = tostring(properties['description'])\r\n    | extend id = tolower(id)\r\n    | project id, roleName, roleDescritpion\r\n) on $left.roleDefinitionId == $right.id\r\n| project-away roleDefinitionId, id",
         "size": 4,
         "title": "Assigned Azure RBAC Role",
         "noDataMessage": "Please select above resource.",
@@ -745,6 +745,14 @@
             {
               "columnMatch": "subscriptionId",
               "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "scope",
+              "formatter": 13,
               "formatOptions": {
                 "linkTarget": null,
                 "showIcon": true
