@@ -10,13 +10,15 @@ Microsoft Defender for Cloud provides two security recommendations about CIEM (C
 | Permissions of inactive identities in your Azure subscription should be revoked  | Medium | Microsoft Defender for Cloud discovered an identity that has not performed any action on any resource within your Azure subscription in the past 45 days. It is recommended to revoke permissions of inactive identities, in order to reduce the attack surface of your cloud environment. |
 
 # Dashboard
-## Overprovisioned ID Information
-![image](https://github.com/user-attachments/assets/a04ee69d-3c01-4eaa-bcbd-920ceb948f74)<BR>
-![image](https://github.com/user-attachments/assets/15f784df-aebf-447e-8d84-6446a40047ee)
+## PCI Summary
+![image](https://github.com/user-attachments/assets/5ae32616-b1b7-4fd0-a051-b11080388704)
 
+## Overprovisioned ID Information
+![image](https://github.com/user-attachments/assets/b8e9722e-60f5-4cf6-a7fd-2eeb98b75723)<BR>
+![image](https://github.com/user-attachments/assets/b58a16dd-6e19-4c98-85d4-d65d3d642903)
 
 ## Permissions of inactive identities
-![image](https://github.com/user-attachments/assets/a78d005f-8700-4131-9be7-287bd3173958)
+![image](https://github.com/user-attachments/assets/fcad65bc-b96c-41f3-884d-ab5334916518)
 
 # Install
 two files are posted. You can install Wrokbooks of Microsoft Defender for Cloud via Gallary Template or ARM Template.
