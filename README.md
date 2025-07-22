@@ -29,3 +29,5 @@ Two files are posted. You can install Wrokbooks of Microsoft Defender for Cloud 
 
 - Defender CSPM - [CIEM Dasboard.workbook](https://raw.githubusercontent.com/hisashin0728/MdcCIEMDashboard/refs/heads/main/Defender%20CSPM%20-%20CIEM%20Dasboard.workbook)
 - Defender CSPM - [CIEM Dasboard.json](https://raw.githubusercontent.com/hisashin0728/MdcCIEMDashboard/refs/heads/main/Defender%20CSPM%20-%20CIEM%20Dasboard.json)
+
+![Deploy to Azure](https://raw.githubusercontent.com/mattu0119/MdcCIEMDashboard/refs/heads/main/Defender%20for%20Cloud%20CIEM%20%E3%83%80%E3%83%83%E3%82%B7%E3%83%A5%E3%83%9C%E3%83%BC%E3%83%89.json)
